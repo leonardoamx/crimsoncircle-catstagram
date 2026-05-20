@@ -8,10 +8,6 @@ import CatModal from './components/CatModal'
 
 
 function App() {
-  const catAPIToken = import.meta.env.VITE_CAT_API_TOKEN
-  const catAPIHeaders = {
-    'x-api-key': catAPIToken
-  };
   const itemsPerPage = 12;
   const randomIndex = Math.floor(Math.random() * itemsPerPage);
 
@@ -31,26 +27,11 @@ function App() {
   }
 
   useEffect(() => {
-    const controller = new AbortController()
-
-    // @TODO: Refactor fetches
-
-    fetch('https://api.thecatapi.com/v1/breeds', {
-      signal: controller.signal,
-      headers: catAPIHeaders
-    })
-    .then(response => response.json())
-    .then(data => setBreedsList(data))
-    .catch(error => {
-      if (error.name !== 'AbortError') {
-        throw error
-      }
-    });
+    requestCatData('/breeds')
+    .then(data => setBreedsList(data));
   }, [])
 
   useEffect(() => {
-    const controller = new AbortController()
-
     const params = new URLSearchParams({
       limit: itemsPerPage.toString(),
     });
@@ -58,21 +39,12 @@ function App() {
       params.append('breed_ids', selectedBreedId)
     }
 
-    fetch(`https://api.thecatapi.com/v1/images/search?${params}`, {
-      signal: controller.signal,
-      headers: catAPIHeaders
-    })
-    .then(response => response.json())
+    requestCatData(`/images/search?${params}`)
     .then(data => {
       setCatsList(data)
 
       if(!featuredCatItem) {
         setFeaturedCatItem(data[randomIndex])
-      }
-    })
-    .catch(error => {
-      if (error.name !== 'AbortError') {
-        throw error
       }
     });
 
@@ -117,6 +89,28 @@ function App() {
       <CatModal data={selectedCatItem} onClose={() => setSelectedCatItem(null)} />
     </div>
   )
+}
+
+async function requestCatData(endpoint: string) {
+  const catAPIToken = import.meta.env.VITE_CAT_API_TOKEN
+  const catAPIHeaders = {
+    'x-api-key': catAPIToken
+  };
+  const apiEntryPoint = "https://api.thecatapi.com/v1";
+  const controller = new AbortController()
+
+  try{
+    const request = await fetch(`${apiEntryPoint}${endpoint}`, {
+      signal: controller.signal,
+      headers: catAPIHeaders
+    });
+    return request.json()
+  } catch (error: any) {
+    if (error.name !== 'AbortError') {
+      throw error
+    }
+  }
+  return null;
 }
 
 export default App
