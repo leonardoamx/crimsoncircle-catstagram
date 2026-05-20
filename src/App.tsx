@@ -11,6 +11,8 @@ function App() {
   const catAPIHeaders = {
     'x-api-key': catAPIToken
   };
+  const itemsPerPage = 12;
+  const randomIndex = Math.floor(Math.random() * itemsPerPage);
 
   const [breedsList, setBreedsList] = useState<BreedItem[]>([])
   const [featuredCatItem, setFeaturedCatItem] = useState<CatItem | null>(null)
@@ -19,41 +21,34 @@ function App() {
   useEffect(() => {
     const controller = new AbortController()
 
+    // @TODO: Refactor fetches
+
     fetch('https://api.thecatapi.com/v1/breeds', {
       signal: controller.signal,
       headers: catAPIHeaders
     })
-      .then(response => response.json())
-      .then(data => setBreedsList(data))
-      .catch(error => {
-        if (error.name !== 'AbortError') {
-          throw error
-        }
-      });
+    .then(response => response.json())
+    .then(data => setBreedsList(data))
+    .catch(error => {
+      if (error.name !== 'AbortError') {
+        throw error
+      }
+    });
 
-    fetch('https://api.thecatapi.com/v1/images/search', {
+    fetch(`https://api.thecatapi.com/v1/images/search?limit=${itemsPerPage}`, {
       signal: controller.signal,
       headers: catAPIHeaders
     })
-      .then(response => response.json())
-      .then(data => setFeaturedCatItem(data[0]))
-      .catch(error => {
-        if (error.name !== 'AbortError') {
-          throw error
-        }
-      });
-
-    fetch('https://api.thecatapi.com/v1/images/search?limit=12', {
-      signal: controller.signal,
-      headers: catAPIHeaders
+    .then(response => response.json())
+    .then(data => {
+      setCatsList(data)
+      setFeaturedCatItem(data[randomIndex])
     })
-      .then(response => response.json())
-      .then(data => setCatsList(data))
-      .catch(error => {
-        if (error.name !== 'AbortError') {
-          throw error
-        }
-      });
+    .catch(error => {
+      if (error.name !== 'AbortError') {
+        throw error
+      }
+    });
 
   }, [])
 
