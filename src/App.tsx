@@ -95,11 +95,11 @@ function App() {
         </div>
       </nav>
       <main className="container">
-        <section className="featured-container my-3 text-center">
+        <section className="featured-container my-3 flex justify-center">
           <FeaturedItem data={featuredCatItem} />
         </section>
         <section>
-          <div className="grid-container columns-2 columns-3md columns-4lg gap-2">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
             {catsList.map((item) => (
               <GridItem key={item.id} data={item} />
             ))}
