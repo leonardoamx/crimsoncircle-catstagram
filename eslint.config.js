@@ -1,17 +1,23 @@
-export default defineConfig([
-  globalIgnores(['dist']),
+import tsPlugin from '@typescript-eslint/eslint-plugin'
+import tsParser from '@typescript-eslint/parser'
+import { fileURLToPath } from 'url'
+
+const tsconfigRootDir = fileURLToPath(new URL('.', import.meta.url))
+
+export default [
+  {
+    ignores: ['dist'],
+  },
   {
     files: ['**/*.{ts,tsx}'],
-    extends: [
-      tseslint.configs.recommendedTypeChecked,
-      tseslint.configs.strictTypeChecked,
-      tseslint.configs.stylisticTypeChecked,
-    ],
     languageOptions: {
+      parser: tsParser,
       parserOptions: {
         project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir,
       },
     },
+    plugins: { '@typescript-eslint': tsPlugin },
+    rules: {},
   },
-])
+]
