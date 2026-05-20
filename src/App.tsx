@@ -1,121 +1,121 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect, useState } from 'react'
+import { Dropdown, type DropdownChangeEvent } from 'primereact/dropdown'
+import GridItem from './components/GridItem'
+import type { CatItem } from './models/CatItem'
+import type { BreedItem } from './models/BreedItem'
+import FeaturedItem from './components/FeaturedItem'
+import CatModal from './components/CatModal'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const catAPIToken = import.meta.env.VITE_CAT_API_TOKEN
+  const catAPIHeaders = {
+    'x-api-key': catAPIToken
+  };
+  const itemsPerPage = 12;
+  const randomIndex = Math.floor(Math.random() * itemsPerPage);
+
+  const [breedsList, setBreedsList] = useState<BreedItem[]>([])
+  const [featuredCatItem, setFeaturedCatItem] = useState<CatItem | null>(null)
+  const [catsList, setCatsList] = useState<CatItem[]>([])
+  const [selectedBreedId, setSelectedBreedId] = useState<string | null>(null)
+  const [selectedCatItem, setSelectedCatItem] = useState<CatItem | null>(null)
+
+  const handleBreedChange = (e: DropdownChangeEvent) => {
+    setSelectedBreedId(e.value);
+    setSelectedCatItem(null);
+  }
+
+  const selectCatItem = (item: CatItem) => {
+    setSelectedCatItem(item)
+  }
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    // @TODO: Refactor fetches
+
+    fetch('https://api.thecatapi.com/v1/breeds', {
+      signal: controller.signal,
+      headers: catAPIHeaders
+    })
+    .then(response => response.json())
+    .then(data => setBreedsList(data))
+    .catch(error => {
+      if (error.name !== 'AbortError') {
+        throw error
+      }
+    });
+  }, [])
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    const params = new URLSearchParams({
+      limit: itemsPerPage.toString(),
+    });
+    if (selectedBreedId) {
+      params.append('breed_ids', selectedBreedId)
+    }
+
+    fetch(`https://api.thecatapi.com/v1/images/search?${params}`, {
+      signal: controller.signal,
+      headers: catAPIHeaders
+    })
+    .then(response => response.json())
+    .then(data => {
+      setCatsList(data)
+
+      if(!featuredCatItem) {
+        setFeaturedCatItem(data[randomIndex])
+      }
+    })
+    .catch(error => {
+      if (error.name !== 'AbortError') {
+        throw error
+      }
+    });
+
+  }, [selectedBreedId])
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="bg-gray-100 content-center">
+      <nav className="w-full bg-white shadow-md sticky top-0 z-50">
+        <div className="container max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <img src="assets/catstagram.png" className="logo-image h-10" alt="Catstagram" />
+            <h1 className="text-lg font-semibold">Catstagram</h1>
+          </div>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+          <div className="flex items-center gap-4">
+            <Dropdown placeholder="Select a breed"
+              options={breedsList}
+              optionValue="id"
+              optionLabel="name"
+              filterBy="name"
+              dataKey="id"
+              className="min-w-55"
+              onChange={handleBreedChange}
+              value={selectedBreedId}
+            />
+          </div>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      </nav>
+      <main className="container">
+        <section className="featured-container my-3 flex justify-center">
+          <FeaturedItem data={featuredCatItem} />
+        </section>
+        <section>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+            {catsList.map((item) => (
+              <GridItem key={item.id} data={item} onClick={selectCatItem} />
+            ))}
+          </div>
+        </section>
+      </main>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <CatModal data={selectedCatItem} onClose={() => setSelectedCatItem(null)} />
+    </div>
   )
 }
 
