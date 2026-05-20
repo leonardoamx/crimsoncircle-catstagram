@@ -3,9 +3,16 @@
 
 ## Setting up the project
 
+After cloning the repository, follow these steps:
+
+- Install dependencies:
 ```
 npm install
 ```
+
+- Create a `.env` file based on `.env.example`.
+- Register at https://thecatapi.com/ to get your own API token and replace the value of `VITE_CAT_API_TOKEN` in the `.env` file.
+
 
 ## Running the development server
 
