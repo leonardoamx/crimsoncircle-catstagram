@@ -22,7 +22,7 @@ function CatModal({ data, onClose }: GridItemProps) {
   let description = 'No information available at the moment, we are working on it :)';
   let breedsList = []
 
-  if (data.breeds) {
+  if (data.breeds?.length > 0) {
     breedsList = data.breeds.map(breed => breed.name);
 
     title = breedsList.length > 1 ? 'Breeds: ' : 'Breed: ';
