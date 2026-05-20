@@ -28,7 +28,7 @@ function CatModal({ data, onClose }: GridItemProps) {
     title = breedsList.length > 1 ? 'Breeds: ' : 'Breed: ';
     title += breedsList.join(', ')
 
-    description = data.breeds[0].description || description
+    description = data.breeds[0]?.description || description
   }
 
   const handleBackdropClick = () => {
