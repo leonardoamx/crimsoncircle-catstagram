@@ -1,5 +1,10 @@
 # Crimson Circle - Catstagram
 
+## Important resources:
+
+- Live demo: https://crimson-circle-catstagram.vercel.app/
+- Github repository: https://github.com/leonardoamx/crimsoncircle-catstagram (Request access to leonardoamx@outlook.com)
+
 
 ## Setting up the project
 
