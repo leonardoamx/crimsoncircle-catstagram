@@ -1,3 +1,4 @@
+import { Ripple } from "primereact/ripple"
 import type { CatItem } from "../models/CatItem"
 import type { KeyboardEvent } from 'react'
 
@@ -18,12 +19,13 @@ function GridItem({ data, onClick }: GridItemProps) {
 
   return (
     <div
-      className="card my-2 cursor-pointer"
+      className="card my-2 cursor-pointer p-ripple"
       role="button"
       tabIndex={0}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
+      <Ripple />
       <img src={data.url} alt="Cat image" className="aspect-3/2 object-contain" />
     </div>
   )
