@@ -4,6 +4,7 @@ import GridItem from './components/GridItem'
 import type { CatItem } from './models/CatItem'
 import type { BreedItem } from './models/BreedItem'
 import FeaturedItem from './components/FeaturedItem'
+import CatModal from './components/CatModal'
 
 
 function App() {
@@ -18,9 +19,15 @@ function App() {
   const [featuredCatItem, setFeaturedCatItem] = useState<CatItem | null>(null)
   const [catsList, setCatsList] = useState<CatItem[]>([])
   const [selectedBreedId, setSelectedBreedId] = useState<string | null>(null)
+  const [selectedCatItem, setSelectedCatItem] = useState<CatItem | null>(null)
 
   const handleBreedChange = (e: DropdownChangeEvent) => {
-    setSelectedBreedId(e.value)
+    setSelectedBreedId(e.value);
+    setSelectedCatItem(null);
+  }
+
+  const selectCatItem = (item: CatItem) => {
+    setSelectedCatItem(item)
   }
 
   useEffect(() => {
@@ -72,7 +79,7 @@ function App() {
   }, [selectedBreedId])
 
   return (
-    <div className="min-h-screen bg-gray-100 content-center">
+    <div className="bg-gray-100 content-center">
       <nav className="w-full bg-white shadow-md sticky top-0 z-50">
         <div className="container max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -101,11 +108,13 @@ function App() {
         <section>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
             {catsList.map((item) => (
-              <GridItem key={item.id} data={item} />
+              <GridItem key={item.id} data={item} onClick={selectCatItem} />
             ))}
           </div>
         </section>
       </main>
+
+      <CatModal data={selectedCatItem} onClose={() => setSelectedCatItem(null)} />
     </div>
   )
 }
