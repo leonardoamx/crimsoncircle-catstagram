@@ -72,16 +72,16 @@ function App() {
   }, [selectedBreedId])
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-100 content-center">
       <nav className="w-full bg-white shadow-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="container max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <img src="assets/catstagram.png" className="logo-image h-10" alt="Catstagram" />
             <h1 className="text-lg font-semibold">Catstagram</h1>
           </div>
 
           <div className="flex items-center gap-4">
-            <Dropdown placeholder='Select a breed'
+            <Dropdown placeholder="Select a breed"
               options={breedsList}
               optionValue="id"
               optionLabel="name"
@@ -94,19 +94,19 @@ function App() {
           </div>
         </div>
       </nav>
-      <main>
-        <section className='featured-container my-3'>
+      <main className="container">
+        <section className="featured-container my-3 text-center">
           <FeaturedItem data={featuredCatItem} />
         </section>
         <section>
-          <div className='grid-container columns-2 columns-3-md columns-4-lg gap-2'>
+          <div className="grid-container columns-2 columns-3md columns-4lg gap-2">
             {catsList.map((item) => (
               <GridItem key={item.id} data={item} />
             ))}
           </div>
         </section>
       </main>
-    </>
+    </div>
   )
 }
 
