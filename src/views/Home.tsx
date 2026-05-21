@@ -9,7 +9,7 @@ import type { BreedItem } from './models/BreedItem'
 import { ProgressSpinner } from 'primereact/progressspinner'
 
 
-function App() {
+function Home() {
   const itemsPerPage = 24;
   const randomIndex = Math.floor(Math.random() * itemsPerPage);
 
@@ -31,7 +31,7 @@ function App() {
 
   useEffect(() => {
     requestCatData('/breeds')
-    .then(data => setBreedsList(data));
+    .then((data: BreedItem[]) => setBreedsList(data));
   }, [])
 
   useEffect(() => {
@@ -45,7 +45,7 @@ function App() {
 
     setLoading(true)
     requestCatData(`/images/search?${params}`)
-    .then(data => {
+    .then((data: CatItem[]) => {
       setCatsList(data)
       setLoading(false)
 
@@ -100,4 +100,4 @@ function App() {
   )
 }
 
-export default App
+export default Home
