@@ -93,4 +93,5 @@ So far I have used a basic useEffect implementations with this features in mind:
 
 - Tailwind CSS: It offers a modern approach when modeling the UI
 - PrimeReact: Between the list of UI I could use, I picked this one
+- React Router: To support multiple views and navigation between them
 - Vite: It's the current toolkit to develop and compile React. In a future version I would like to implement Vite+ instead
