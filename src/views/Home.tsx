@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { requestCatData } from './services/CatAPIService'
+import { requestCatData } from '../services/CatAPIService'
 import { Dropdown, type DropdownChangeEvent } from 'primereact/dropdown'
-import GridItem from './components/GridItem'
-import FeaturedItem from './components/FeaturedItem'
-import CatModal from './components/CatModal'
-import type { CatItem } from './models/CatItem'
-import type { BreedItem } from './models/BreedItem'
+import GridItem from '../components/GridItem'
+import FeaturedItem from '../components/FeaturedItem'
+import CatModal from '../components/CatModal'
+import type { CatItem } from '../models/CatItem'
+import type { BreedItem } from '../models/BreedItem'
 import { ProgressSpinner } from 'primereact/progressspinner'
 
 
