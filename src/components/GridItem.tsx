@@ -25,8 +25,8 @@ function GridItem({ data, onClick }: GridItemProps) {
       onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
+      <img src={data.url || '/assets/placeholder.png'} alt="Cat image" className="aspect-3/2 object-contain" loading="lazy" />
       <Ripple />
-      <img src={data.url} alt="Cat image" className="aspect-3/2 object-contain" />
     </div>
   )
 }
