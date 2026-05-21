@@ -52,7 +52,7 @@ function CatModal({ data, onClose }: GridItemProps) {
             Cerrar
           </button>
         </div>
-        <img src={data.url} alt="Cat image" className="aspect-3/2 object-cover mb-4 w-full" />
+        <img src={data.url || '/assets/placeholder.png'} alt="Cat image" className="aspect-3/2 object-cover mb-4 w-full" />
         <h2 className="text-xl font-semibold mb-4">{title}</h2>
         <p className="mb-4">{description}</p>
       </div>
