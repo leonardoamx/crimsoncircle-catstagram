@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
+import { requestCatData } from './services/CatAPIService'
 import { Dropdown, type DropdownChangeEvent } from 'primereact/dropdown'
 import GridItem from './components/GridItem'
-import type { CatItem } from './models/CatItem'
-import type { BreedItem } from './models/BreedItem'
 import FeaturedItem from './components/FeaturedItem'
 import CatModal from './components/CatModal'
+import type { CatItem } from './models/CatItem'
+import type { BreedItem } from './models/BreedItem'
+import { ProgressSpinner } from 'primereact/progressspinner'
 
 
 function App() {
-  const itemsPerPage = 12;
+  const itemsPerPage = 24;
   const randomIndex = Math.floor(Math.random() * itemsPerPage);
 
   const [breedsList, setBreedsList] = useState<BreedItem[]>([])
@@ -16,6 +18,7 @@ function App() {
   const [catsList, setCatsList] = useState<CatItem[]>([])
   const [selectedBreedId, setSelectedBreedId] = useState<string | null>(null)
   const [selectedCatItem, setSelectedCatItem] = useState<CatItem | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleBreedChange = (e: DropdownChangeEvent) => {
     setSelectedBreedId(e.value);
@@ -34,14 +37,17 @@ function App() {
   useEffect(() => {
     const params = new URLSearchParams({
       limit: itemsPerPage.toString(),
+      page: '0'
     });
     if (selectedBreedId) {
       params.append('breed_ids', selectedBreedId)
     }
 
+    setLoading(true)
     requestCatData(`/images/search?${params}`)
     .then(data => {
       setCatsList(data)
+      setLoading(false)
 
       if(!featuredCatItem) {
         setFeaturedCatItem(data[randomIndex])
@@ -73,9 +79,9 @@ function App() {
           </div>
         </div>
       </nav>
-      <main className="container">
-        <section className="featured-container my-3 flex justify-center">
-          <FeaturedItem data={featuredCatItem} />
+      <main className="container min-h-screen">
+        <section className="featured-container my-4 flex justify-center w-full md:w-3/4 mx-auto">
+          <FeaturedItem data={featuredCatItem} onClick={selectCatItem} />
         </section>
         <section>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
@@ -83,34 +89,15 @@ function App() {
               <GridItem key={item.id} data={item} onClick={selectCatItem} />
             ))}
           </div>
+          <div className='flex justify-center'>
+            {loading && <ProgressSpinner className='w-10 h-10' />}
+          </div>
         </section>
       </main>
 
       <CatModal data={selectedCatItem} onClose={() => setSelectedCatItem(null)} />
     </div>
   )
-}
-
-async function requestCatData(endpoint: string) {
-  const catAPIToken = import.meta.env.VITE_CAT_API_TOKEN
-  const catAPIHeaders = {
-    'x-api-key': catAPIToken
-  };
-  const apiEntryPoint = "https://api.thecatapi.com/v1";
-  const controller = new AbortController()
-
-  try{
-    const request = await fetch(`${apiEntryPoint}${endpoint}`, {
-      signal: controller.signal,
-      headers: catAPIHeaders
-    });
-    return request.json()
-  } catch (error: any) {
-    if (error.name !== 'AbortError') {
-      throw error
-    }
-  }
-  return null;
 }
 
 export default App
