@@ -2,7 +2,7 @@
 
 ## Important resources:
 
-- Vercel Live demo: https://crimson-circle-catstagram.vercel.app/
+- Vercel Live demo: https://crimsoncircle-catstagram.vercel.app/
 - Github repository: https://github.com/leonardoamx/crimsoncircle-catstagram (Request access to leonardoamx@outlook.com)
 
 
