@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent, type KeyboardEvent, type MouseEvent, type SubmitEvent } from 'react'
 import { submitAuth } from '../services/AuthService'
+import { useAuth } from '../contexts/AuthContext'
 
 interface LoginModalProps {
   show: boolean,
@@ -7,6 +8,8 @@ interface LoginModalProps {
 }
 
 function LoginModal({ show, onClose }: LoginModalProps) {
+  const { login } = useAuth()
+
   if(!show) {
     return null;
   }
@@ -41,7 +44,8 @@ function LoginModal({ show, onClose }: LoginModalProps) {
     setSubmitting(true)
     try {
       const endpoint = isLogin ? '/api/login' : '/api/register'
-      await submitAuth(endpoint, form);
+      const result: any = await submitAuth(endpoint, form);
+      login(result.token)
       onClose?.();
     } catch (error: any) {
       setStatusMessage(error.body.message || "Couldn't register");
