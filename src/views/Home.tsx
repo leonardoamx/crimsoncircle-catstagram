@@ -7,12 +7,14 @@ import CatModal from '../components/CatModal'
 import type { CatItem } from '../models/CatItem'
 import type { BreedItem } from '../models/BreedItem'
 import { ProgressSpinner } from 'primereact/progressspinner'
+import LoginModal from '../components/LoginModal'
 
 
 function Home() {
   const itemsPerPage = 24;
   const randomIndex = Math.floor(Math.random() * itemsPerPage);
 
+  const [showLogin, setShowLogin] = useState(true);
   const [breedsList, setBreedsList] = useState<BreedItem[]>([])
   const [featuredCatItem, setFeaturedCatItem] = useState<CatItem | null>(null)
   const [catsList, setCatsList] = useState<CatItem[]>([])
@@ -77,6 +79,9 @@ function Home() {
               value={selectedBreedId}
             />
           </div>
+          <button onClick={() => setShowLogin(true)} disabled={showLogin} className='bg-blue-500 text-white rounded px-4 py-2 disabled:opacity-50'>
+            Login
+          </button>
         </div>
       </nav>
       <main className="container min-h-screen">
@@ -95,6 +100,7 @@ function Home() {
         </section>
       </main>
 
+      <LoginModal show={showLogin} onClose={() => setShowLogin(false)} />
       <CatModal data={selectedCatItem} onClose={() => setSelectedCatItem(null)} />
     </div>
   )
