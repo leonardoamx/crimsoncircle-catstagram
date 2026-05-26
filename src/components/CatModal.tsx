@@ -49,7 +49,7 @@ function CatModal({ data, onClose }: GridItemProps) {
             onClick={onClose}
             onKeyDown={handleKeyDown}
           >
-            Cerrar
+            Close
           </button>
         </div>
         <img src={data.url || '/assets/placeholder.png'} alt="Cat image" className="aspect-3/2 object-cover mb-4 w-full" />
