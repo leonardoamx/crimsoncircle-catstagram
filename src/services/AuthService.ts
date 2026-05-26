@@ -5,13 +5,8 @@ export interface AuthPayload {
   password: string
 }
 
-export interface AuthResponse {
-  user?: {
-    id: string
-    name: string
-    email: string
-  },
-  token?: string
+export function getAuthToken(): string | null {
+  return localStorage.getItem('auth_token')
 }
 
 export async function submitAuth(endpoint: string, payload: AuthPayload) {

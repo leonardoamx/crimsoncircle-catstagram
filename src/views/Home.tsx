@@ -8,13 +8,16 @@ import type { CatItem } from '../models/CatItem'
 import type { BreedItem } from '../models/BreedItem'
 import { ProgressSpinner } from 'primereact/progressspinner'
 import LoginModal from '../components/LoginModal'
+import { useAuth } from '../contexts/AuthContext'
 
 
 function Home() {
   const itemsPerPage = 24;
   const randomIndex = Math.floor(Math.random() * itemsPerPage);
 
-  const [showLogin, setShowLogin] = useState(true);
+  const authContext = useAuth();
+
+  const [showLogin, setShowLogin] = useState(!authContext.token);
   const [breedsList, setBreedsList] = useState<BreedItem[]>([])
   const [featuredCatItem, setFeaturedCatItem] = useState<CatItem | null>(null)
   const [catsList, setCatsList] = useState<CatItem[]>([])

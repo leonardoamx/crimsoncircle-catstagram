@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type KeyboardEvent, type MouseEvent, type SubmitEvent } from 'react'
 import { submitAuth } from '../services/AuthService'
 import { useAuth } from '../contexts/AuthContext'
+import type { LoginData } from '../models/LoginData'
 
 interface LoginModalProps {
   show: boolean,
@@ -44,8 +45,8 @@ function LoginModal({ show, onClose }: LoginModalProps) {
     setSubmitting(true)
     try {
       const endpoint = isLogin ? '/api/login' : '/api/register'
-      const result: any = await submitAuth(endpoint, form);
-      login(result.token)
+      const result: LoginData = await submitAuth(endpoint, form);
+      login(result)
       onClose?.();
     } catch (error: any) {
       setStatusMessage(error.body.message || "Couldn't register");
